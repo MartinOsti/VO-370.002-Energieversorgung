@@ -1,0 +1,219 @@
+﻿\documentclass[a4paper,11pt]{scrartcl}
+\usepackage{a4wide}
+\usepackage{fancyhdr}
+\usepackage[naustrian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{enumerate}%Aufzählungen
+\usepackage{amsmath}%Formeln
+\usepackage[locale=DE]{siunitx}%Einheiten
+\usepackage{eurosym}%Eurosymbol
+\usepackage{tikz}%Zeichnungen
+\usepackage{pgfplots}%Funktionen plotten
+\usepackage[european]{circuitikz}%Schaltungen
+\usetikzlibrary{decorations.pathreplacing}
+\pgfplotsset{compat=1.8}
+
+\pagestyle{fancy} %eigener Seitenstil
+\fancyhf{} %alle Kopf- und Fußzeilenfelder bereinigen
+\fancyhead[L]{Energieversorgung\\VO 370.002} %Kopfzeile links
+\fancyhead[C]{Lösung zur Prüfung vom 05.03.2014} %zentrierte Kopfzeile
+\fancyhead[R]{www.fet.at} %Kopfzeile rechts
+\renewcommand{\headrulewidth}{0.4pt} %obere Trennlinie
+\fancyfoot[C]{\thepage} %Seitennummer
+\renewcommand{\footrulewidth}{0.4pt} %untere Trennlinie
+
+
+
+\DeclareSIUnit\year{a}
+\DeclareSIUnit\wattelectrical{W_{el}}
+\DeclareSIUnit\hourelectrical{h_{el}}
+\DeclareSIUnit{\EUR}{\text{\euro}}
+\DeclareSIUnit{\dollar}{\$}
+\sisetup{per-mode = fraction,}
+
+
+
+\newcommand{\mybr}[1]{\left(#1\right)}
+\newcommand{\ugamma}{\underline{\gamma}}
+\renewcommand{\j}{\mathrm{j}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\Z}{\underline{Z}}
+\renewcommand{\S}{\underline{S}}
+\newcommand{\U}{\underline{U}}
+\newcommand{\I}{\underline{I}}
+\newcommand{\E}{\underline{E}}
+\newcommand{\0}{_{\mybr{0}}}
+\newcommand{\1}{_{\mybr{1}}}
+\newcommand{\2}{_{\mybr{2}}}
+\renewcommand{\a}{\underline{a}}
+
+
+\begin{document}
+\section{Lastfluss- und Kurzschlussbetrachtung}
+Das ist jetzt erstellt worden.
+\begin{enumerate}[a)]
+\item
+\begin{align}
+X_G&=x_d\frac{U_2^2}{S_N}=\SI{1,5}{}\frac{\mybr{\SI{0,4}{\kilo\volt}}^2}{\SI{400}{\mega\volt\ampere}}=\SI{0,6}{\milli\ohm}\\
+R_G&=\SI{0}{\ohm}\\
+Z_{T1}&=u_k\frac{U_2^2}{S_N}=\SI{0,06}{}\frac{\mybr{\SI{0,4}{\kilo\volt}}^2}{\SI{5}{\mega\volt\ampere}}=\SI{1,92}{\milli\ohm}\\
+R_{T1}&=P_k\frac{U_2^2}{S_N^2}=\SI{0,08}{\mega\watt}\frac{\mybr{\SI{0,4}{\kilo\volt}}^2}{\mybr{\SI{5}{\mega\volt\ampere}}^2}=\SI{0,512}{\milli\ohm}\\
+X_{T1}&=\sqrt{Z_{T1}^2-R_{T1}^2}=\sqrt{\mybr{\SI{1,92}{\milli\ohm}}^2-\mybr{\SI{0,512}{\milli\ohm}}^2}=\SI{1,85}{\milli\ohm}\\
+Z_{T2}&=u_k\frac{U_2^2}{S_N}=\SI{0,06}{}\frac{\mybr{\SI{0,4}{\kilo\volt}}^2}{\SI{630}{\kilo\volt\ampere}}=\SI{15,24}{\milli\ohm}\\
+R_{T2}&=P_k\frac{U_2^2}{S_N^2}=\SI{9}{\kilo\watt}\frac{\mybr{\SI{0,4}{\kilo\volt}}^2}{\mybr{\SI{630}{\kilo\volt\ampere}}^2}=\SI{3,628}{\milli\ohm}\\
+X_{T2}&=\sqrt{Z_{T2}^2-R_{T2}^2}=\sqrt{\mybr{\SI{15,24}{\milli\ohm}}^2-\mybr{\SI{3,628}{\milli\ohm}}^2}=\SI{14,80}{\milli\ohm}\\
+R_{L1}&=R'l\mybr{\frac{U_2}{U_1}}^2=\SI{0,7}{\ohm\per\kilo\metre}\cdot\SI{6}{\kilo\metre}\cdot\mybr{\frac{\SI{0,4}{kV}}{\SI{20}{\kilo\volt}}}^2=\SI{1,68}{\milli\ohm}\\
+X_{L1}&=X'l\mybr{\frac{U_2}{U_1}}^2=\SI{0,4}{\ohm\per\kilo\metre}\cdot\SI{6}{\kilo\metre}\cdot\mybr{\frac{\SI{0,4}{kV}}{\SI{20}{\kilo\volt}}}^2=\SI{0,960}{\milli\ohm}\\
+R_{L2}&=R'l=\SI{0,3}{\ohm\per\kilo\metre}\cdot\SI{4}{\kilo\metre}=\SI{60}{\milli\ohm}\\
+X_{L2}&=X'l=\SI{0,1}{\ohm\per\kilo\metre}\cdot\SI{4}{\kilo\metre}=\SI{20}{\milli\ohm}
+\end{align}
+\item
+\begin{align}
+\Z_{Ges,V}&=\mybr{R_{T1}+R_{T2}+R_{L1}+R_{L2}}+\j\mybr{X_{T1}+X_{T2}+X_{L1}+X_{L2}}\\
+&=\mybr{\SI{0,512}{}+\SI{3,628}{}+\SI{1,68}{}+\SI{60}{}}\si{\milli\ohm}+\j\mybr{\SI{1,85}{}+\SI{14,8}{}+\SI{0,96}{}+\SI{20}{}}\si{\milli\ohm}\\
+&=\mybr{\SI{65,82}{}+\SI{37,61}{}}\si{\milli\ohm}=\SI{75,81}{}\cdot\e^{\j\SI{0,5191}{}}\si{\milli\ohm}
+\end{align}
+\item
+\begin{equation}
+v_p=\SI{90}{\degree}-\SI{0,517}{}\cdot\frac{\SI{180}{\degree}}{\pi}=\SI{60,26}{\degree}
+\end{equation}
+\item
+\begin{align}
+X_G&=x_d''\frac{U_2^2}{S_N}=\SI{0,25}{}\frac{\mybr{\SI{400}{\volt}}}{\SI{400}{\mega\volt\ampere}}=\SI{0,1}{\milli\ohm}\\
+\Z_{k,Ges,V}&=\Z_{Ges,V}+\j X_G=\mybr{\SI{65,82}{}+\SI{37,71}{}}\si{\milli\ohm}\\
+\vert\Z_{k,Ges,V}\vert&=\SI{75,86}{\milli\ohm}\\
+S_k&=c\frac{U_2^2}{\vert\Z_{k,Ges,V}\vert}=\SI{1}{}\cdot\frac{\mybr{\SI{400}{\volt}}^2}{\SI{75,86}{\milli\ohm}}=\SI{2,109}{\mega\volt\ampere}
+\end{align}
+\item
+\begin{equation}
+i_{k3p}''=c\frac{U_2}{\sqrt{3}Z_{k,Ges,V}}=\SI{1,1}{}\cdot\frac{\SI{400}{\volt}}{\sqrt{3}\cdot\SI{75,86}{\milli\ohm}}=\SI{3,348}{\kilo\ampere}
+\end{equation}
+\end{enumerate}
+\section{Drehstromkomponentensystem}
+\begin{enumerate}[a)]
+\item
+Messschaltungen von S.49 und S.50 im Skriptum
+\begin{align}
+\frac{\I_a}{\I_b}&=\frac{\Z_b}{\Z_a}=\frac{1}{2}\\
+\Z\0&=\frac{\U\0}{\I\0}=\frac{\frac{1}{3}\mybr{\U_{aN}+\U_{bN}+\U_{cN}}}{\frac{1}{3}\mybr{\I_a+\I_b+\I_c}}=\frac{3U_{aN}}{\I_a\mybr{1+2+2}}\\
+&=\frac{3\mybr{\I_a\Z_a+\mybr{\I_a+\I_b+\I_c}\Z_N}}{5\I_a}=\frac{3\I_a\mybr{2\Z_b+5\cdot\frac{1}{5}\Z_b}}{5\I_a}=\frac{9}{5}\Z_b
+\end{align}
+\begin{figure*}[!h]
+\centering
+\begin{circuitikz}
+\begin{scope}[scale=0.8]
+	%\draw [help lines] (-1,-1) grid (5,5); %Zeichnet Raster und vereinfacht damit das Zeichnen
+	
+	%Schaltung
+	\draw (0,0) to[R, l_=$\Z_c$, i>_=$\I_c$, o-] (4,0)
+	-- (4,4)
+	to[R, l^=$\Z_a$, i^<=$\I_a$, -o] (0,4);
+	\draw (0,2) to[R, l_=$\Z_b$, i>_=$\I_b$, o-*] (4,2);
+	
+	%Spannungen
+	\draw node[left] at (0,4) {$\U_{aN}$};
+	\draw node[left] at (0,2) {$\a^2\U_{aN}=\U_{bN}$};
+	\draw node[left] at (0,0) {$\a\U_{aN}=\U_{cN}$};
+
+\end{scope}
+\end{circuitikz}
+\end{figure*}
+\begin{align}
+\Z\1&=\frac{\U\1}{\I\1}=\frac{\frac{1}{3}\mybr{\U_{aN}+\a\U_{bN}+\a^2\U_{cN}}}{\frac{1}{3}\mybr{\I_a+\a\I_b+\a^2\I_c}}\\
+\U_{aN}-\Z_a\I_a&=\U_{bN}-\Z_b\I_b\\
+\I_b&=\frac{\U_{aN}\mybr{\a^2-1}+\Z_a\I_a}{\Z_b}\\
+\U_{aN}-\Z_a\I_a&=\U_{cN}-\Z_c\I_c\\
+\I_c&=\frac{\U_{aN}\mybr{\a-1}+\Z_a\I_a}{\Z_c}\\
+\I_a&=-\I_b-\I_c=\frac{\U_{aN}}{\Z_b}\mybr{-\a^2+1-\a+1}-4\I_a\\
+5\I_a&=3\frac{\U_{aN}}{\Z_b}\\
+\I_a&=\frac{3}{5}\frac{\U_{aN}}{\Z_b}\\
+\Z\1&=\frac{3U_aN}{\I_a+\frac{\U_{aN}}{\Z_b}\a\mybr{\a^2-1}+2\a\I_a+\frac{\U_{aN}}{\Z_b}\a^2\mybr{\a-1}+2\a^2\I_a}\\
+&=\frac{3\U_{aN}}{-\I_a+3\frac{\U_{aN}}{\Z_b}}=\frac{3\U_{aN}}{-\frac{3}{5}\frac{\U_{aN}}{\Z_b}+3\frac{U_{aN}}{\Z_b}}=\frac{5}{4}\Z_b
+\end{align}
+\begin{equation}
+\Z\2=\frac{\U\2}{\I\2}=\frac{\frac{1}{3}\mybr{\U_{aN}+\a^2\U_{bN}+\a\U_{cN}}}{\frac{1}{3}\mybr{\I_a+\a^2\I_b+\a\I_c}}=\frac{U_{aN}}{\I_a+\a^2\I_b+\a\I_c}
+\end{equation}
+Wenn man $\I_b$ und $\I_c$ miteinander vertauscht, was man machen darf, weil $\Z_b=\Z_c$, dann hat man die selbe Gleichung wie für $\Z\1$, woraus folgt $\Z\2=\Z\1$.
+
+
+\item
+\begin{align}
+\I\0&=\frac{1}{3}\mybr{k I_{ph}+\a^2 I_{ph}+\a I_{ph}}=\frac{1}{3}\mybr{k-1}I_{ph}\\
+\I\1&=\frac{1}{3}\mybr{k I_{ph}+I_{ph}+I_{ph}}=\frac{1}{3}\mybr{k+2}I_{ph}\\
+\I\2&=\frac{1}{3}\mybr{k I_{ph}+\a I_{ph}+\a^2 I_{ph}}=\frac{1}{3}\mybr{k-1}I_{ph}
+\end{align}
+\item
+\begin{align}
+\U\0&=\Z\0\I\0=\frac{9}{5}\Z_b\frac{1}{3}\mybr{k-1}I_ph=\frac{3}{5}\mybr{k-1}\Z_b I_{ph}\\
+\U\1&=\Z\1\I\1=\frac{5}{4}\Z_b\frac{1}{3}\mybr{k+2}I_ph=\frac{5}{12}\mybr{k+2}\Z_b I_{ph}\\
+\U\2&=\Z\2\I\2=\frac{5}{4}\Z_b\frac{1}{3}\mybr{k-1}I_ph=\frac{5}{12}\mybr{k-1}\Z_b I_{ph}
+\end{align}
+\item
+\begin{align}
+\U_a&=\U\0+\U\1+\U\2=\mybr{\frac{3}{5}\mybr{k-1}+\frac{5}{12}\mybr{k+2}+\frac{5}{12}\mybr{k-1}}\Z_b I_{ph}\\
+&=\mybr{\frac{43}{30}k-\frac{11}{60}}\Z_b I_{ph}
+\end{align}
+\item
+\begin{equation}
+\U_a=\mybr{\frac{43}{30}\cdot\SI{0,619}-\frac{11}{60}}\mybr{15+\j 5}\si{\ohm}\cdot\SI{13,05}{\ampere}=\mybr{\SI{137,8}{}+\j \SI{45,93}{}}\si{\volt}
+\end{equation}
+\end{enumerate}
+
+
+
+\section{Pumpspeicherkraftwerk}
+\begin{enumerate}[a)]
+\item
+\begin{equation}
+E=\rho V g \Delta h=\SI{1000}{\kilo\gram\per\cubic\metre}\cdot\SI{0,6}{}\cdot\SI{70e6}{\cubic\metre}\cdot\SI{9,81}{\metre\per\square\second}\cdot\SI{150}{\metre}=\SI{61,8e12}{\joule}=\SI{61,8}{\tera\joule}
+\end{equation}
+\item
+\begin{align}
+P_{el}&=\eta_H\eta_T\eta_{el}\mybr{1-\varepsilon}\rho Q_N g \Delta h\\
+&=\SI{0,94}{}\cdot\SI{0,92}{}\cdot\SI{0,96}{}\cdot\mybr{\SI{1}{}-\SI{0,02}{}}\cdot\SI{1000}{\kilo\gram\per\cubic\metre}\cdot\SI{115}{\cubic\metre\per\second}\cdot\SI{9,81}{\metre\per\square\second}\cdot\SI{150}{\metre}=\SI{137,68}{\mega\watt}
+\end{align}
+\item
+\begin{equation}
+t=\frac{V_{OS}\mybr{FS-FS_{min}}}{Q_N}=\frac{\SI{70e6}{\cubic\metre}\cdot\mybr{\SI{0,6}{}-\SI{0,4}{}}}{\SI{115}{\cubic\metre\per\second}}=\SI{121,74e3}{\second}=\SI{33,82}{\hour}
+\end{equation}
+\item
+\begin{equation}
+P_{el}=\frac{\rho Q_{Pump} g \Delta h}{\eta_H\eta_P\eta_{el}\mybr{1-\varepsilon}}=\frac{\SI{1000}{\kilo\gram\per\cubic\metre}\cdot\SI{115}{\cubic\metre\per\second}\cdot\SI{9,81}{\metre\per\square\second}\cdot\SI{150}{\metre}}{\SI{0,94}{}\cdot\SI{0,88}{}\cdot\SI{0,96}{}\cdot\mybr{\SI{1}{}-\SI{0,02}{}}}=\SI{170,17}{\mega\watt}
+\end{equation}
+\item
+\begin{equation}
+\eta_{Ges}=\eta_H^2\eta_T\eta_P\eta_{el}^2\mybr{1-\varepsilon}^2=\SI{0,94}{}^2\cdot\SI{0,92}{}\cdot\SI{0,88}{}\cdot\SI{0,96}{}^2\cdot\mybr{\SI{1}{}-\SI{0,02}{}}^2=\SI{0,6332}{}
+\end{equation}
+\item
+\begin{equation}
+D=\sqrt{2 g \Delta h}\frac{p}{2\pi f}=\sqrt{2\cdot\SI{9,81}{\metre\per\square\second}\cdot\SI{150}{m}}\cdot\frac{12}{2\pi\SI{50}{\hertz}}=\SI{2,072}{\metre}
+\end{equation}
+\end{enumerate}
+\setcounter{section}{2}
+
+\section{Fünf Sicherheitsregeln}
+Siehe Skriptum S.IX
+\section{Wirtschaftlichkeitsbetrachtung eines Solarkraftwerks}
+\begin{enumerate}[a)]
+\item
+\begin{equation}
+T_m=\frac{E}{P}=\frac{\SI{1079}{\giga\watt\hour\per\year}}{\SI{377}{\mega\watt}}=\SI{2862,07}{\hour\per\year}
+\end{equation}
+\item
+\begin{align}
+\beta_-&=\frac{q^n-1}{\mybr{q-1}q^n}=\frac{\SI{1,05}{}^{25}-1}{\mybr{\SI{1,05}{}-1}\SI{1,05}{}^{25}}=\SI{14,09}{\year}\\
+\alpha&=\frac{1}{\beta_-}\\
+K&=\alpha A+Z=\frac{1}{\SI{14,09}{\year}}\cdot\SI{1600e6}{\dollar}+\SI{6e6}{\dollar\per\year}+\SI{2,2e6}{\dollar\per\year}=\SI{121,724e6}{\dollar\per\year}
+\end{align}
+\item
+\begin{align}
+\beta_+&=\frac{\mybr{q^m-1}q}{q-1}=\frac{\mybr{\SI{1,070}{}^{25}-1}\SI{1,07}{}}{\SI{1,07}{}-1}=\SI{67,6765}{}\\
+B_{25}&=A_{R,-m} q^m+Z\beta_++Z+Z\beta_-+R_n q^{-n}\\
+&=\SI{600e6}{\dollar}\cdot\SI{1,07}{}^{25}+\SI{121,724e6}{\dollar}\cdot\mybr{\SI{67,6765}{}+1}=\SI{11,616e9}{\dollar}
+\end{align}
+\item
+\begin{equation}
+p=\frac{\frac{B_{25}+G}{\beta_+}}{E}=\frac{\frac{\SI{11,616e9}{\dollar}+\SI{3e9}{\dollar}}{\SI{67,6765}{}}}{\SI{1079e6}{\kilo\watt\hour}}=\SI{0,200}{\dollar\per\kilo\watt\per\hour}
+\end{equation}
+\end{enumerate}
+\end{document}

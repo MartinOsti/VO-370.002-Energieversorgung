@@ -1,0 +1,361 @@
+﻿\documentclass[11pt,a4paper]{scrartcl}
+\usepackage{a4wide}
+\usepackage{fancyhdr}
+\usepackage[naustrian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{enumerate}%Aufzählungen
+\usepackage{amsmath}%Formeln
+\usepackage[locale=DE]{siunitx}%Einheiten
+\usepackage{eurosym}%Eurosymbol
+\usepackage{tikz}%Zeichnungen
+\usepackage{pgfplots}%Funktionen plotten
+\usepackage[european]{circuitikz}%Schaltungen
+\usetikzlibrary{decorations.pathreplacing}
+
+
+\pagestyle{fancy} %eigener Seitenstil
+\fancyhf{} %alle Kopf- und Fußzeilenfelder bereinigen
+\fancyhead[L]{Energieversorgung\\VO 370.002} %Kopfzeile links
+\fancyhead[C]{Lösung zur Prüfung vom 29.04.2014} %zentrierte Kopfzeile
+\fancyhead[R]{www.fet.at} %Kopfzeile rechts
+\renewcommand{\headrulewidth}{0.4pt} %obere Trennlinie
+\fancyfoot[C]{\thepage} %Seitennummer
+\renewcommand{\footrulewidth}{0.4pt} %untere Trennlinie
+
+
+%%%%%%% Makro für Schalter in CircuiTikz %%%%%%%
+% modified code from pgfcircbipoles.sty and circuitikz1.code.tex
+\makeatletter
+% create the shape
+\pgfcircdeclarebipole{}{\ctikzvalof{bipoles/interr/height 2}}{spst}{\ctikzvalof{bipoles/interr/height}}{\ctikzvalof{bipoles/interr/width}}{
+
+    \pgfsetlinewidth{\pgfkeysvalueof{/tikz/circuitikz/bipoles/thickness}\pgfstartlinewidth}
+
+    \pgfpathmoveto{\pgfpoint{\pgf@circ@res@left}{0pt}}
+    \pgfpathlineto{\pgfpoint{.6\pgf@circ@res@right}{\pgf@circ@res@up}}
+    \pgfusepath{draw}   
+}
+% make the shape accessible with nice syntax
+\def\pgf@circ@spst@path#1{\pgf@circ@bipole@path{spst}{#1}}
+\tikzset{switch/.style = {\circuitikzbasekey, /tikz/to path=\pgf@circ@spst@path, l=#1}}
+\tikzset{spst/.style = {switch = #1}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\DeclareSIUnit\year{a}
+\DeclareSIUnit\wattelectrical{W_{el}}
+\DeclareSIUnit\hourelectrical{h_{el}}
+\DeclareSIUnit{\EUR}{\text{\euro}}
+\sisetup{
+  per-mode = fraction,
+}
+
+\newcommand{\mybr}[1]{\left(#1\right)}
+\newcommand{\ugamma}{\underline{\gamma}}
+\renewcommand{\j}{\mathrm{j}}
+\newcommand{\Z}{\underline{Z}}
+\renewcommand{\S}{\underline{S}}
+\newcommand{\U}{\underline{U}}
+\newcommand{\I}{\underline{I}}
+\newcommand{\E}{\underline{E}}
+\newcommand{\0}{_{\mybr{0}}}
+\newcommand{\1}{_{\mybr{1}}}
+\newcommand{\2}{_{\mybr{2}}}
+\renewcommand{\a}{\underline{a}}
+
+
+\begin{document}
+\section{Leitungsgleichungen}
+\begin{enumerate}[a)]
+\item
+\begin{align}
+\ugamma&=\sqrt{\mybr{R'+\j\omega L'}\mybr{G'+\j\omega C'}}\\
+\Z_W&=\sqrt{\frac{R'+\j\omega L'}{G'+\j\omega C'}}\\
+P_{nat}&=\frac{U_n^2}{Z_W}
+\end{align}
+\item
+\begin{equation}
+R_L=\frac{U_n^2}{P_L}
+\end{equation}
+\item
+\begin{equation}
+\S_1=\U_1\I_1^*=\U_1\frac{\U_1^*}{\Z_W^*}=\frac{U_n^2}{\Z_W^*}
+\end{equation}
+\item
+\begin{align}
+\U_1&=\cosh\mybr{\ugamma l}\U_2+\sinh\mybr{\ugamma l}\Z_W\I_2\\
+&=\cosh\mybr{\ugamma l}\U_2+\sinh\mybr{\ugamma l}\Z_W\frac{\U_2}{R_L}\\
+\U_2&=\frac{\U_1}{\cosh\mybr{\ugamma l}+\sinh\mybr{\ugamma l}\frac{\Z_W}{R_L}}
+\end{align}
+\item
+\begin{align}
+\U_1&=\cosh\mybr{\ugamma l}\U_2+\sinh\mybr{\ugamma l}\Z_W\I_2\\
+&=\cosh\mybr{\ugamma l}\SI{0,9}\U_1+\sinh\mybr{\ugamma l}\Z_W\frac{\SI{0,9}\U_1}{\Z_2}\\
+\sinh\mybr{\ugamma l}\Z_W\frac{\SI{0,9}\U_1}{\Z_2}&=\U_1-\cosh\mybr{\ugamma l}\SI{0,9}\U_1\\
+\Z_2&=\frac{\sinh\mybr{\ugamma l}\Z_W\SI{0,9}\U_1}{\U_1-\cosh\mybr{\ugamma l}\SI{0,9}\U_1}
+\end{align}
+\item
+\end{enumerate}
+\section{Ein- und zweipoliger Kurzschluss}
+\begin{enumerate}[a)]
+\item
+
+\begin{figure*}[!h]
+\centering
+\begin{circuitikz}
+\begin{scope}[scale=0.8]
+	%\draw [help lines] (-1,-1) grid (12,17); %Zeichnet Raster und vereinfacht damit das Zeichnen
+	
+	%Nullsystem
+	\draw (0,0) -- (0,3)
+	to[switch] (2,3)
+	to[R, l=$X_T$] (4,3)
+	to[R, l=$X_0$] (6,3)
+	-- (7,3);
+	\draw (0,0) -- (7,0);
+	\draw (4,3) to[C, l=$C\0$, *-*] (4,0);
+	\draw node[ocirc] (B0) at (7,3) {}	node[ocirc] (A0) at (7,0) {} (A0) to [open, v=$\U\0$] (B0);
+	\draw (7,3) to[short, i>^=$\I\0$] (8,3);
+
+	%Gegensystem
+	\draw (0,6) -- (0,9)
+	to[R, l=$X_d''$] (2,9)
+	to[R, l=$X_T$] (4,9)
+	to[R, l=$X_L$] (6,9)
+	-- (7,9);
+	\draw (0,6) -- (7,6);
+	\draw node[ocirc] (B2) at (7,9) {}	node[ocirc] (A2) at (7,6) {} (A2) to [open, v=$\U\2$] (B2);
+	\draw (7,9) to[short, i>^=$\I\2$] (8,9);
+	
+	% Mitsystem
+	\draw (0,15) to[V, v^=$\E\1{=}c\frac{U_n}{\sqrt{3}}$] (0,12);
+	\draw (0,15) to[R, l=$X_d''$] (2,15)
+	to[R, l=$X_T$] (4,15)
+	to[R, l=$X_L$] (6,15)
+	-- (7,15);
+	\draw (0,12) -- (7,12);
+	\draw node[ocirc] (B1) at (7,15) {}	node[ocirc] (A1) at (7,12) {} (A1) to [open, v=$\U\1$] (B1);
+	\draw (7,15) to[short, i>^=$\I\1$] (9,15);
+	
+	%Verbindung
+	\draw (7,0) -| (9,15);
+	\draw (8,3) |- (7,6);
+	\draw (8,9) |- (7,12);
+	
+	%Kästchen
+	\draw (-1,-1) -| (6.5,4.2) -| node[near end,left] {$\mybr{0}$} (-1,-1);
+	\draw (-1,5) -| (6.5,10.2) -| node[near end,left] {$\mybr{2}$} (-1,5);
+	\draw (-1,11) -| (6.5,16.2) -| node[near end,left] {$\mybr{1}$} (-1,11);
+\end{scope}
+\end{circuitikz}
+\end{figure*}
+
+\item
+\begin{align}
+X_d''&=x_d''\frac{U_2^2}{S_N}\\
+X_T&=u_k\frac{U_2^2}{S_N}\\
+X_L&=\omega L_B' l\\
+C\0&=C_E' l\\
+\I\1&=\frac{c\frac{U_n}{\sqrt{3}}}{2\j\mybr{X_d''+X_T+X_L}+\j X_0+\frac{1}{\j\omega C\0}}\\
+\I_{k1p}''&=\I_a=\I\0+\I\1+\I\2=3\I\1
+\end{align}
+\item
+\begin{align}
+\j\omega 3L_p+\j X_T+\frac{1}{\j\omega C\0}&=0\\
+L_p&=\frac{1}{3\omega^2 C\0}-\frac{X_T}{3\omega}
+\end{align}
+\item
+
+\begin{figure*}[!h]
+\centering
+\begin{circuitikz}
+\begin{scope}[scale=0.8]
+	%\draw [help lines] (-1,-1) grid (12,17); %Zeichnet Raster und vereinfacht damit das Zeichnen
+	
+	%Nullsystem
+	\draw (0,0) to[american inductor, l_=$3L_p$] (0,3)
+	-- (2,3)
+	to[R, l=$X_T$] (4,3)
+	to[R, l=$X_0$] (6,3)
+	-- (7,3);
+	\draw (0,0) -- (7,0);
+	\draw (4,3) to[C, l=$C\0$, *-*] (4,0);
+	\draw node[ocirc] (B0) at (7,3) {}	node[ocirc] (A0) at (7,0) {} (A0) to [open, v=$\U\0$] (B0);
+	\draw (7,3) to[short, i>^=$\I\0$] (9,3);
+
+	%Gegensystem
+	\draw (0,6) -- (0,9)
+	to[R, l=$X_d''$] (2,9)
+	to[R, l=$X_T$] (4,9)
+	to[R, l=$X_L$] (6,9)
+	-- (7,9);
+	\draw (0,6) -- (7,6);
+	\draw node[ocirc] (B2) at (7,9) {}	node[ocirc] (A2) at (7,6) {} (A2) to [open, v=$\U\2$] (B2);
+	\draw (7,9) to[short, i>^=$\I\2$, -*] (9,9);
+	
+	% Mitsystem
+	\draw (0,15) to[V, v^=$\E\1{=}c\frac{U_n}{\sqrt{3}}$] (0,12);
+	\draw (0,15) to[R, l=$X_d''$] (2,15)
+	to[R, l=$X_T$] (4,15)
+	to[R, l=$X_L$] (6,15)
+	-- (7,15);
+	\draw (0,12) -- (7,12);
+	\draw node[ocirc] (B1) at (7,15) {}	node[ocirc] (A1) at (7,12) {} (A1) to [open, v=$\U\1$] (B1);
+	\draw (7,15) to[short, i>^=$\I\1$] (9,15);
+	
+	%Verbindung
+	\draw (7,0) -| (10,12) -- (7,12);
+	\draw (9,3) |- (9,15);
+	\draw (7,6) to[short, -*] (10,6);
+	
+	%Kästchen
+	\draw (-1,-1) -| (6.5,4.2) -| node[near end,left] {$\mybr{0}$} (-1,-1);
+	\draw (-1,5) -| (6.5,10.2) -| node[near end,left] {$\mybr{2}$} (-1,5);
+	\draw (-1,11) -| (6.5,16.2) -| node[near end,left] {$\mybr{1}$} (-1,11);
+\end{scope}
+\end{circuitikz}
+\end{figure*}
+
+\item
+\begin{align}
+\I\0&=\SI{0}{\ampere}\\
+\I\1&=-\I\2=\frac{c\frac{U_n}{\sqrt{3}}}{2\j\mybr{X_d''+X_T+X_L}}\\
+\I_b&=\I\0+\a^2\I\1+\a\I\2=\mybr{\a^2-\a}\I\1=-\j\sqrt{3}\I\1\\
+\I_c&=\I\0+\a\I\1+\a^2\I\2=\mybr{\a-\a^2}\I\1=\j\sqrt{3}\I\1
+\end{align}
+\item
+In der Skizze sind die wahren Flussrichtungen und nicht die Orientierungen eingezeichnet.
+\begin{figure*}[!h]
+\centering
+\begin{circuitikz}
+\begin{scope}[scale=0.8]
+	%\draw [help lines] (-1,-1) grid (8,5); %Zeichnet Raster und vereinfacht damit das Zeichnen
+	
+	\draw (0,0) -- node[near end,left] {$B$} (0,4);
+	\draw (7,0) -- node[near end,right] {$C$} (7,4);
+	\draw (0,1) 
+	to[short] (6,1)
+	to[short, i>^=$\I_c$] (7,1);
+	\draw (0,2) 
+	to[short] (6,2)
+	to[short, i>^=$\I_b$] (7,2);
+	\draw (0,3) 
+	to[short] (7,3);
+	
+\end{scope}
+\end{circuitikz}
+\end{figure*}
+\end{enumerate}
+\section{A Transformator}
+\begin{enumerate}[a)]
+\item
+\begin{equation}
+R_k=P_k\frac{U_2^2}{S_N^2}
+\end{equation}
+\item
+\begin{align}
+P_L&=G_L U_L^2\\
+G_L&=\frac{P_L}{U_L^2}=\frac{P_L}{U_2^2}
+\end{align}
+\item
+\begin{align}
+Q_L&=-B_L U_L^2\\
+S_L&=U_L I_L=U_N I_N\cdot\SI{0,25}{\percent}=S_N\cdot\SI{0,25}{\percent}\\
+Q_L&=\sqrt{S_L^2-P_L^2}\\
+B_L&=-\frac{Q_L}{U_L^2}
+\end{align}
+\item
+\begin{equation}
+Z_k=u_k\frac{U_2^2}{S_N}
+\end{equation}
+\end{enumerate}
+\setcounter{section}{2}
+\section{B Parallelschaltung von zwei Transformatoren}
+\begin{enumerate}[a)]
+\item
+\begin{figure*}[!h]
+\centering
+\begin{circuitikz}
+\begin{scope}[scale=0.8]
+	%\draw [help lines] (-1,-1) grid (7,4); %Zeichnet Raster und vereinfacht damit das Zeichnen
+	
+	%Schaltung
+	\draw (0,0) -- (6,0);
+	\draw (0,3) to[R, l_=$Z_{kT1}$] (3,3)
+	to[R, l_=$Z_{kT2}$] (6,3);
+	
+	%Spannungspfeile
+	\draw node[ocirc] (B0) at (3,3) {}	node[ocirc] (A0) at (3,0) {} (A0) to [open, v=$\U_{US}'$] (B0);
+	\draw node[ocirc] (B1) at (0,3) {}	node[ocirc] (A1) at (0,0) {} (A1) to [open, v^=$\U_{US1}$] (B1);
+	\draw node[ocirc] (B2) at (6,3) {}	node[ocirc] (A2) at (6,0) {} (A2) to [open, v=$\U_{US2}$] (B2);
+	{
+	\ctikzset{voltage/distance from node=.1}
+	\ctikzset{voltage/bump b=5.0}
+	\ctikzset{voltage/european label distance=4.5}
+	\draw (B2) to [open, v=$\Delta\U_{US}$] (B1);
+	}
+	
+\end{scope}
+\end{circuitikz}
+\end{figure*}
+\begin{align}
+\Delta\U_{US}&=\U_{US1}-\U_{US2}=\U_{OS}\mybr{\frac{1}{\underline{\textit{ü}}_1}-\frac{1}{\underline{\textit{ü}}_2}}\\
+\U_{US}'&=\U_{US1}-\frac{Z_{kT1}}{Z_{kT1}+Z_{kT2}}\Delta\U_{US}
+\end{align}
+\item
+\begin{equation}
+\I_k=\frac{\Delta\U_{US}}{Z_{kT1}+Z_{kT2}}
+\end{equation}
+\item
+\end{enumerate}
+\section{Fünf Sicherheitsregeln}
+Siehe Skriptum S.IX
+\section{Wirtschaftlichkeitsrechnung}
+\begin{enumerate}[a)]
+\item
+\begin{align}
+\alpha&=\frac{\mybr{q-1}q^n}{q^n-1}=\frac{\mybr{\SI{1,05}{}-1}\SI{1,05}{}^{25}}{\SI{1,05}{}^{25}-1}=\SI{0,07095}{\per\year}\\
+T_m&=\frac{E}{P}=\frac{\SI{2100}{\giga\watt\hour\per\year}}{\SI{300}{\mega\wattelectrical}}=\SI{7000}{\hour\per\year}\\
+k&=\frac{\alpha a+c}{T_m}+b+d\\
+&=\frac{\SI{0,07095}{\per\year}\cdot\SI{590}{\EUR\per\kilo\wattelectrical}+\SI{87}{\EUR\per\kilo\wattelectrical\per\year}}{\SI{7000}{\hour\per\year}}+\frac{\SI{0,37}{\EUR\per\cubic\metre}\cdot\SI{3,6}{\mega\joule\per\kilo\watt\per\hour}}{\SI{0,59}{}\cdot\SI{30}{\mega\joule\per\cubic\metre}}+\SI{0,001}{\EUR\per\kilo\watt\per\hourelectrical}\\
+&=\SI{0,09466}{\EUR\per\kilo\watt\per\hourelectrical}
+\end{align}
+\item
+\begin{align}
+\alpha&=\frac{\mybr{q-1}q^n}{q^n-1}=\frac{\mybr{\SI{1,04}{}-1}\SI{1,04}{}^{40}}{\SI{1,04}{}^{40}-1}=\SI{0,05052}{\per\year}\\
+T_m&=\frac{E}{P}=\frac{\SI{1560}{\giga\watt\hour\per\year}}{\SI{300}{\mega\wattelectrical}}=\SI{5200}{\hour\per\year}\\
+k&=\frac{\alpha a+c}{T_m}+b+d\\
+&=\frac{\SI{0,05052}{\per\year}\cdot\SI{3100}{\EUR\per\kilo\wattelectrical}+\SI{78}{\EUR\per\kilo\wattelectrical\per\year}}{\SI{5200}{\hour\per\year}}\\
+&=\SI{0,04512}{\EUR\per\kilo\watt\per\hourelectrical}
+\end{align}
+\item
+\begin{align}
+k_{GuD}&=\frac{\alpha_{LWK} a_{LWK}+c_{LWK}}{T_{m,LWK}}\\
+T_{m,LWK}&=\frac{\alpha_{LWK} a_{LWK}+c_{LWK}}{k_{GuD}}=\frac{\SI{0,05052}{\per\year}\cdot\SI{3100}{\EUR\per\kilo\wattelectrical}+\SI{78}{\EUR\per\kilo\wattelectrical\per\year}}{\SI{0,09466}{\EUR\per\kilo\watt\per\hourelectrical}}=\SI{2478}{\hour\per\year}
+\end{align}
+\item
+\begin{align}
+k_{GuD}&=\frac{\SI{128,9}{\EUR\per\kilo\wattelectrical\per\year}}{T_m}+\SI{0,07625}{\EUR\per\kilo\watt\per\hourelectrical}\\
+k_{LWK}&=\frac{\SI{234,6}{\EUR\per\kilo\wattelectrical\per\year}}{T_m}
+\end{align}
+
+\begin{figure*}[!h]
+		\centering
+		\begin{tikzpicture}
+			\begin{axis}[width=0.5\linewidth, xlabel={$T_m$ in $\si{\hour}$}, ylabel={$k_{GuD}$, $k_{LWK}$ in \si{\EUR\per\kilo\watt\per\hourelectrical}}, grid, xmin=20, xmax=8760,samples=100, ymin=0, ymax=0.3, legend to name=k-legende, name=kplot]
+				\addplot[domain=500:8760, blue] {128.9/x+0.07625};
+				\addlegendentry{$k_{GuD}$}
+				\addplot[domain=700:8760, red]  {234.6/x};
+				\addlegendentry{$k_{LWK}$}
+				\addplot[domain=0:8760, black, style=dashed] {0.07625};
+				\draw[style=dashed] (axis cs:1386,\pgfkeysvalueof{/pgfplots/ymin}) -- (axis cs:1386,\pgfkeysvalueof{/pgfplots/ymax});
+				\draw[color=black] (axis cs:1386,0.1693) circle (2pt);
+			\end{axis}
+			\node at (kplot.east) [anchor=south, xshift=-1.50cm, yshift=1cm]
+			{\pgfplotslegendfromname{k-legende}};
+		\end{tikzpicture}%
+\end{figure*}
+\item
+\end{enumerate}
+\end{document}
